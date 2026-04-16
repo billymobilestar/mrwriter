@@ -1,26 +1,284 @@
 @import "tailwindcss";
 
+@font-face {
+  font-family: 'Courier Prime';
+  src: url('/fonts/CourierPrime-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Courier Prime';
+  src: url('/fonts/CourierPrime-Bold.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Courier Prime';
+  src: url('/fonts/CourierPrime-Italic.ttf') format('truetype');
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Courier Prime';
+  src: url('/fonts/CourierPrime-BoldItalic.ttf') format('truetype');
+  font-weight: 700;
+  font-style: italic;
+  font-display: swap;
+}
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --bg: #1e1e24;
+  --bg-deep: #17171c;
+  --surface: #2a2a32;
+  --surface-hover: #32323c;
+  --surface-raised: #353540;
+  --border: rgba(255, 255, 255, 0.07);
+  --border-strong: rgba(255, 255, 255, 0.12);
+  --text: #e8e8ed;
+  --text-secondary: #9898a4;
+  --text-muted: #5c5c6a;
+  --accent: #6c6cff;
+  --accent-soft: rgba(108, 108, 255, 0.15);
+  --orange: #ff8a3d;
+  --orange-soft: rgba(255, 138, 61, 0.12);
+  --green: #4ade80;
+  --green-soft: rgba(74, 222, 128, 0.12);
+  --red: #f87171;
+  --page-bg: #f5f0e6;
+  --page-text: #1a1a1a;
+  --radius: 10px;
+  --radius-sm: 7px;
+  --radius-lg: 14px;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --color-background: var(--bg);
+  --color-foreground: var(--text);
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--bg-deep);
+  color: var(--text);
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ═══════════════════════════════════════════
+   CodeMirror Fountain Editor
+   ═══════════════════════════════════════════ */
+
+.cm-editor {
+  font-family: 'Courier Prime', 'Courier New', monospace !important;
+  font-size: 12pt;
+  line-height: 1.0;
+  height: 100%;
+  background: var(--page-bg) !important;
+  color: var(--page-text);
+}
+
+.cm-editor .cm-content {
+  max-width: 7.5in;
+  margin: 0 auto;
+  padding: 72px 48px 240px 72px;
+  caret-color: #333;
+  min-height: 100%;
+}
+
+.cm-editor .cm-scroller {
+  overflow: auto;
+}
+
+.cm-editor.cm-focused {
+  outline: none;
+}
+
+.cm-editor .cm-cursor {
+  border-left-color: #444;
+  border-left-width: 2px;
+}
+
+.cm-editor .cm-selectionBackground {
+  background: rgba(108, 108, 255, 0.15) !important;
+}
+
+.cm-editor .cm-activeLine {
+  background: rgba(0, 0, 0, 0.02);
+}
+
+.cm-editor .cm-placeholder {
+  color: #b5ad9e;
+}
+
+/* Text should be slightly warm, like aged typewriter ink */
+.cm-editor .cm-content {
+  color: #2c2416;
+}
+
+/* ── Fountain Elements ── */
+
+.cm-fountain-scene-heading {
+  font-weight: bold !important;
+  text-transform: uppercase;
+  padding-top: 1em !important;
+}
+
+.cm-fountain-character {
+  padding-left: 30% !important;
+  padding-right: 30% !important;
+  text-transform: uppercase;
+  padding-top: 1em !important;
+}
+
+.cm-fountain-dialogue {
+  padding-left: 15% !important;
+  padding-right: 15% !important;
+}
+
+.cm-fountain-parenthetical {
+  padding-left: 22% !important;
+  padding-right: 22% !important;
+}
+
+.cm-fountain-transition {
+  padding-left: 60% !important;
+  text-transform: uppercase;
+  padding-top: 1em !important;
+}
+
+.cm-fountain-title-key {
+  color: #999;
+  font-size: 10pt;
+}
+
+.cm-fountain-title-value {
+  padding-left: 25% !important;
+  padding-right: 25% !important;
+  font-weight: bold !important;
+  font-size: 18pt;
+}
+
+.cm-fountain-centered {
+  padding-left: 25% !important;
+  padding-right: 25% !important;
+}
+
+.cm-fountain-section {
+  color: #666;
+  font-weight: bold !important;
+}
+
+.cm-fountain-synopsis {
+  color: #999;
+  font-style: italic;
+}
+
+.cm-fountain-note {
+  color: #aaa;
+  font-style: italic;
+}
+
+.cm-fountain-page-break {
+  padding-left: 30% !important;
+  padding-right: 30% !important;
+  color: #ccc;
+  border-top: 1px solid #ddd;
+  padding-top: 1em !important;
+  padding-bottom: 1em !important;
+}
+
+.cm-fountain-lyric {
+  font-style: italic;
+}
+
+/* ── Screenplay page wrapper ── */
+.screenplay-page {
+  background-color: var(--page-bg);
+  background-image: url('/paper-texture.svg');
+  background-repeat: repeat;
+  box-shadow:
+    0 0 0 1px rgba(120, 100, 70, 0.1),
+    0 1px 2px rgba(0, 0, 0, 0.1),
+    0 4px 16px rgba(0, 0, 0, 0.14),
+    0 20px 60px rgba(0, 0, 0, 0.2);
+  min-height: 100%;
+  width: 8in;
+  max-width: 100%;
+  flex: none;
+  border-radius: 3px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  position: relative;
+}
+
+/* Edge darkening / vignette — aged paper gets darker at the edges */
+.screenplay-page::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    ellipse at 50% 50%,
+    transparent 60%,
+    rgba(160, 130, 90, 0.06) 80%,
+    rgba(120, 90, 50, 0.1) 100%
+  );
+  pointer-events: none;
+  z-index: 2;
+  border-radius: 3px;
+}
+
+/* Left margin line — like a real screenplay page */
+.screenplay-page::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 68px;
+  width: 1px;
+  background: rgba(180, 155, 120, 0.18);
+  z-index: 1;
+  pointer-events: none;
+}
+
+/* ── Scrollbar (editor) ── */
+.cm-editor .cm-scroller::-webkit-scrollbar {
+  width: 7px;
+}
+
+.cm-editor .cm-scroller::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.cm-editor .cm-scroller::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.12);
+  border-radius: 4px;
+}
+
+.cm-editor .cm-scroller::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.2);
+}
+
+/* ── Global scrollbar ── */
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.14);
 }
