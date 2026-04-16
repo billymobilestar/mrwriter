@@ -134,23 +134,27 @@ const FountainEditor = forwardRef<FountainEditorHandle, FountainEditorProps>(
 
     return (
       <div className="screenplay-page flex flex-col overflow-hidden">
-        {/* Element toolbar — sits on the off-white page */}
+        {/* Element toolbar — scrollable horizontally on mobile */}
         <div
-          className="shrink-0 flex items-center gap-1 px-5 py-2.5"
-          style={{ borderBottom: "1px solid #e0d8c8", background: "#ece6d8" }}
+          className="shrink-0 flex items-center gap-1 px-3 sm:px-5 py-2 sm:py-2.5 overflow-x-auto scrollbar-hide"
+          style={{
+            borderBottom: "1px solid #e0d8c8",
+            background: "#ece6d8",
+            scrollbarWidth: "none",
+          }}
         >
           <span
-            className="text-xs font-mono tabular-nums mr-2 px-2 py-1 rounded-md"
+            className="text-xs font-mono tabular-nums mr-2 px-2 py-1 rounded-md shrink-0"
             style={{ color: "#8a7e6c", background: "#e0d8c6" }}
           >
             {currentLine}
           </span>
-          <div className="w-px h-5 mr-1" style={{ background: "#d5ccba" }} />
+          <div className="w-px h-5 mr-1 shrink-0" style={{ background: "#d5ccba" }} />
           {TOOLBAR_ELEMENTS.map(({ key, label }) => (
             <button
               key={key}
               onClick={() => handleSetElement(key)}
-              className="px-3 py-1.5 text-[13px] font-medium rounded-lg transition-all"
+              className="px-3 py-1.5 text-[13px] font-medium rounded-lg transition-all shrink-0 whitespace-nowrap"
               style={
                 currentElement === key
                   ? { background: "#3a3428", color: "#f5f0e6", boxShadow: "0 1px 3px rgba(0,0,0,0.2)" }

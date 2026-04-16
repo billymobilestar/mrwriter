@@ -217,6 +217,19 @@ body {
   position: relative;
 }
 
+/* Mobile — document fills available width */
+@media (max-width: 900px) {
+  .screenplay-page {
+    width: 100%;
+  }
+  .cm-editor .cm-content {
+    padding: 48px 24px 180px 40px;
+  }
+  .screenplay-page::after {
+    left: 36px;
+  }
+}
+
 /* Edge darkening / vignette — aged paper gets darker at the edges */
 .screenplay-page::before {
   content: '';
@@ -262,6 +275,15 @@ body {
 
 .cm-editor .cm-scroller::-webkit-scrollbar-thumb:hover {
   background: rgba(0, 0, 0, 0.2);
+}
+
+/* Hide scrollbar for horizontal toolbars on mobile */
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
 
 /* ── Global scrollbar ── */

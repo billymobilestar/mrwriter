@@ -56,7 +56,7 @@ Provide specific line-by-line suggestions for tightening or expanding.`,
 
 export async function POST(req: NextRequest) {
   try {
-    const { text, action, customPrompt } = await req.json();
+    const { text, action, customPrompt, instructions } = await req.json();
 
     if (!text || typeof text !== "string") {
       return NextResponse.json(
@@ -72,6 +72,12 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    // Optional user-provided direction to layer on top of presets
+    const userDirection =
+      typeof instructions === "string" && instructions.trim()
+        ? `\n\n**Additional direction from the user** (prioritize this over the general guidelines above):\n${instructions.trim()}`
+        : "";
+
     let userPrompt: string;
     if (action === "custom") {
       if (!customPrompt || typeof customPrompt !== "string") {
@@ -80,7 +86,7 @@ export async function POST(req: NextRequest) {
           { status: 400 }
         );
       }
-      userPrompt = `${customPrompt}\n\nHere is the screenplay passage:\n\n${text}`;
+      userPrompt = `${customPrompt}${userDirection}\n\nHere is the screenplay passage:\n\n${text}`;
     } else {
       const actionPrompt = ACTION_PROMPTS[action as Exclude<Action, "custom">];
       if (!actionPrompt) {
@@ -89,7 +95,7 @@ export async function POST(req: NextRequest) {
           { status: 400 }
         );
       }
-      userPrompt = `${actionPrompt}\n\nHere is the screenplay passage:\n\n${text}`;
+      userPrompt = `${actionPrompt}${userDirection}\n\nHere is the screenplay passage:\n\n${text}`;
     }
 
     const message = await anthropic.messages.create({

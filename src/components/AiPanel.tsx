@@ -36,6 +36,7 @@ export default function AiPanel({
   const [error, setError] = useState("");
   const [activeAction, setActiveAction] = useState<Action | null>(null);
   const [customPrompt, setCustomPrompt] = useState("");
+  const [instructions, setInstructions] = useState("");
   const [useSelection, setUseSelection] = useState(true);
 
   const textToAnalyze = useSelection && hasSelection ? selectedText : fullScript;
@@ -49,14 +50,19 @@ export default function AiPanel({
         const res = await fetch("/api/ai/script", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ text: textToAnalyze, action, customPrompt: action === "custom" ? customPrompt : undefined }),
+          body: JSON.stringify({
+            text: textToAnalyze,
+            action,
+            customPrompt: action === "custom" ? customPrompt : undefined,
+            instructions: instructions.trim() || undefined,
+          }),
         });
         const data = await res.json();
         if (!res.ok) { setError(data.error || "Failed"); return; }
         setResult(data.result);
       } catch { setError("Connection failed."); } finally { setLoading(false); }
     },
-    [textToAnalyze, customPrompt]
+    [textToAnalyze, customPrompt, instructions]
   );
 
   const isRewrite = activeAction ? ACTIONS.find((a) => a.key === activeAction)?.isRewrite : false;
@@ -72,8 +78,12 @@ export default function AiPanel({
 
   return (
     <div
-      className="w-[340px] shrink-0 flex flex-col h-full overflow-hidden"
-      style={{ background: "var(--surface)", borderLeft: "1px solid var(--border)" }}
+      className="w-full md:w-[340px] shrink-0 flex flex-col h-full overflow-hidden ml-auto"
+      style={{
+        background: "var(--surface)",
+        borderLeft: "1px solid var(--border)",
+        maxWidth: "100vw",
+      }}
     >
       {/* Header */}
       <div className="flex items-center justify-between px-4 py-3" style={{ borderBottom: "1px solid var(--border)" }}>
@@ -128,6 +138,42 @@ export default function AiPanel({
         </div>
       </div>
 
+      {/* Instructions (optional direction) */}
+      <div className="px-4 py-3" style={{ borderBottom: "1px solid var(--border)" }}>
+        <div className="flex items-center justify-between mb-1.5">
+          <label className="text-[10px] font-semibold uppercase tracking-wider" style={{ color: "var(--text-muted)" }}>
+            Direction
+            <span className="ml-1.5 font-normal normal-case tracking-normal" style={{ color: "var(--text-muted)" }}>(optional)</span>
+          </label>
+          {instructions && (
+            <button
+              onClick={() => setInstructions("")}
+              className="text-[10px]"
+              style={{ color: "var(--text-muted)" }}
+            >
+              Clear
+            </button>
+          )}
+        </div>
+        <textarea
+          value={instructions}
+          onChange={(e) => setInstructions(e.target.value)}
+          placeholder="e.g. Make it darker and more noir — shorter dialogue"
+          rows={2}
+          className="w-full px-3 py-2 rounded-lg text-xs outline-none resize-none"
+          style={{
+            background: "var(--bg)",
+            border: "1px solid var(--border)",
+            color: "var(--text)",
+          }}
+          onFocus={(e) => e.currentTarget.style.borderColor = "var(--accent)"}
+          onBlur={(e) => e.currentTarget.style.borderColor = "var(--border)"}
+        />
+        <p className="text-[10px] mt-1.5" style={{ color: "var(--text-muted)" }}>
+          Any extra guidance — tone, style, what to focus on. Applies to the action below.
+        </p>
+      </div>
+
       {/* Actions */}
       <div className="px-4 py-3" style={{ borderBottom: "1px solid var(--border)" }}>
         <div className="grid grid-cols-3 gap-1.5">
@@ -136,7 +182,7 @@ export default function AiPanel({
               key={key}
               onClick={() => handleAction(key)}
               disabled={loading}
-              className="flex flex-col items-center gap-0.5 p-2.5 rounded-xl text-center transition-all border disabled:opacity-30"
+              className="flex flex-col items-center gap-0.5 p-2.5 rounded-xl text-center transition-all border disabled:opacity-30 relative"
               style={
                 loading && activeAction === key
                   ? { background: "var(--accent-soft)", borderColor: "var(--accent)", color: "var(--accent)" }
@@ -145,6 +191,13 @@ export default function AiPanel({
               onMouseEnter={(e) => { if (!loading) { e.currentTarget.style.borderColor = "var(--border-strong)"; e.currentTarget.style.color = "var(--text)"; } }}
               onMouseLeave={(e) => { if (!(loading && activeAction === key)) { e.currentTarget.style.borderColor = "var(--border)"; e.currentTarget.style.color = "var(--text-secondary)"; } }}
             >
+              {instructions && (
+                <div
+                  className="absolute top-1 right-1 w-1.5 h-1.5 rounded-full"
+                  style={{ background: "var(--accent)" }}
+                  title="Custom direction will be used"
+                />
+              )}
               <span className="text-[11px] font-semibold">{label}</span>
               <span className="text-[9px]" style={{ color: "var(--text-muted)" }}>{description}</span>
             </button>

@@ -119,14 +119,14 @@ function EditorInner() {
     <div className="h-screen flex flex-col" style={{ background: "var(--bg-deep)" }}>
       {/* ── Top Bar ── */}
       <header
-        className="shrink-0 flex items-center justify-between px-4 h-14"
+        className="shrink-0 flex items-center justify-between gap-2 px-2 sm:px-4 h-14"
         style={{ background: "var(--surface)", borderBottom: "1px solid var(--border)" }}
       >
         {/* Left */}
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1 sm:gap-2 min-w-0 flex-1">
           <button
             onClick={() => router.push("/")}
-            className="w-9 h-9 rounded-lg flex items-center justify-center transition-colors"
+            className="w-9 h-9 rounded-lg flex items-center justify-center transition-colors shrink-0"
             style={{ color: "var(--text-muted)" }}
             onMouseEnter={(e) => { e.currentTarget.style.background = "var(--surface-hover)"; e.currentTarget.style.color = "var(--text)"; }}
             onMouseLeave={(e) => { e.currentTarget.style.background = "transparent"; e.currentTarget.style.color = "var(--text-muted)"; }}
@@ -136,19 +136,19 @@ function EditorInner() {
             </svg>
           </button>
 
-          <div className="w-px h-5" style={{ background: "var(--border)" }} />
+          <div className="hidden sm:block w-px h-5" style={{ background: "var(--border)" }} />
 
-          <div className="flex items-center gap-2 ml-1">
+          <div className="flex items-center gap-2 min-w-0 flex-1">
             <input
               type="text"
               value={title}
               onChange={(e) => { setTitle(e.target.value); saveScript(content, e.target.value); }}
-              className="text-sm font-medium bg-transparent border-none outline-none w-60"
+              className="text-sm font-medium bg-transparent border-none outline-none w-full sm:w-60 min-w-0"
               style={{ color: "var(--text)" }}
               placeholder="Untitled"
             />
             <div
-              className="flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-medium"
+              className="hidden sm:flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-medium shrink-0"
               style={{
                 background: saved ? "var(--green-soft)" : "var(--orange-soft)",
                 color: saved ? "var(--green)" : "var(--orange)",
@@ -160,12 +160,18 @@ function EditorInner() {
               />
               {saved ? "Saved" : "Saving"}
             </div>
+            {/* Mobile: just a dot */}
+            <div
+              className="sm:hidden w-2 h-2 rounded-full shrink-0"
+              style={{ background: saved ? "var(--green)" : "var(--orange)" }}
+              title={saved ? "Saved" : "Saving..."}
+            />
           </div>
         </div>
 
-        {/* Center — stats */}
+        {/* Center — stats (hidden on mobile + small tablets) */}
         <div
-          className="flex items-center gap-1 px-3 py-1.5 rounded-lg"
+          className="hidden lg:flex items-center gap-1 px-3 py-1.5 rounded-lg"
           style={{ background: "var(--surface-raised)", border: "1px solid var(--border)" }}
         >
           {content ? (
@@ -194,42 +200,44 @@ function EditorInner() {
           )}
         </div>
 
-        {/* Right */}
-        <div className="flex items-center gap-1">
+        {/* Right — icon-only buttons on mobile, labels on desktop */}
+        <div className="flex items-center gap-1 shrink-0">
           <button
             onClick={() => setShowAiPanel(!showAiPanel)}
-            className="flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-[13px] font-medium transition-all"
+            className="flex items-center justify-center gap-1.5 w-9 h-9 sm:w-auto sm:h-auto sm:px-3.5 sm:py-2 rounded-lg text-[13px] font-medium transition-all"
             style={{
               background: showAiPanel ? "var(--accent)" : "var(--accent-soft)",
               color: showAiPanel ? "white" : "var(--accent)",
             }}
+            title="AI Assistant"
           >
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-3.5 h-3.5">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4 sm:w-3.5 sm:h-3.5">
               <circle cx="12" cy="12" r="3" />
               <path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83" />
             </svg>
-            AI
+            <span className="hidden sm:inline">AI</span>
           </button>
 
           <button
             onClick={() => setShowRedditModal(true)}
-            className="flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-[13px] font-medium transition-all"
+            className="flex items-center justify-center gap-1.5 w-9 h-9 sm:w-auto sm:h-auto sm:px-3.5 sm:py-2 rounded-lg text-[13px] font-medium transition-all"
             style={{ background: "var(--orange-soft)", color: "var(--orange)" }}
             onMouseEnter={(e) => e.currentTarget.style.background = "rgba(255,138,61,0.2)"}
             onMouseLeave={(e) => e.currentTarget.style.background = "var(--orange-soft)"}
+            title="Import from Reddit"
           >
-            <svg viewBox="0 0 24 24" fill="currentColor" className="w-3 h-3">
+            <svg viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4 sm:w-3 sm:h-3">
               <path d="M12 0C5.373 0 0 5.373 0 12c0 3.314 1.343 6.314 3.515 8.485l-2.286 2.286C.775 23.225 1.097 24 1.768 24H12c6.627 0 12-5.373 12-12S18.627 0 12 0z" />
             </svg>
-            Reddit
+            <span className="hidden sm:inline">Reddit</span>
           </button>
 
-          <div className="w-px h-5 mx-0.5" style={{ background: "var(--border)" }} />
+          <div className="hidden sm:block w-px h-5 mx-0.5" style={{ background: "var(--border)" }} />
 
           <button
             onClick={handleExportFountain}
             disabled={!content}
-            className="flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-[13px] font-medium transition-all disabled:opacity-30"
+            className="hidden sm:flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-[13px] font-medium transition-all disabled:opacity-30"
             style={{ background: "var(--surface-raised)", color: "var(--text-secondary)", border: "1px solid var(--border)" }}
             onMouseEnter={(e) => { if (content) e.currentTarget.style.background = "var(--surface-hover)"; }}
             onMouseLeave={(e) => { e.currentTarget.style.background = "var(--surface-raised)"; }}
@@ -243,8 +251,8 @@ function EditorInner() {
       </header>
 
       {/* ── Editor + AI ── */}
-      <div className="flex-1 overflow-hidden flex">
-        <div className="flex-1 overflow-hidden flex justify-center p-4">
+      <div className="flex-1 overflow-hidden flex relative">
+        <div className="flex-1 overflow-hidden flex justify-center p-2 sm:p-4">
           {loaded ? (
             <FountainEditor
               ref={editorRef}
@@ -259,16 +267,26 @@ function EditorInner() {
           )}
         </div>
 
+        {/* AI Panel — side panel on desktop, full-screen overlay on mobile */}
         {showAiPanel && (
-          <AiPanel
-            isOpen={showAiPanel}
-            onClose={() => setShowAiPanel(false)}
-            selectedText={selectedText}
-            fullScript={content}
-            hasSelection={hasSelection}
-            onReplaceSelection={(t) => editorRef.current?.replaceSelection(t)}
-            onReplaceAll={(t) => editorRef.current?.setContent(t)}
-          />
+          <>
+            {/* Mobile backdrop */}
+            <div
+              className="md:hidden fixed inset-0 z-40 bg-black/50"
+              onClick={() => setShowAiPanel(false)}
+            />
+            <div className="fixed md:relative inset-0 md:inset-auto z-50 md:z-auto flex md:block">
+              <AiPanel
+                isOpen={showAiPanel}
+                onClose={() => setShowAiPanel(false)}
+                selectedText={selectedText}
+                fullScript={content}
+                hasSelection={hasSelection}
+                onReplaceSelection={(t) => editorRef.current?.replaceSelection(t)}
+                onReplaceAll={(t) => editorRef.current?.setContent(t)}
+              />
+            </div>
+          </>
         )}
       </div>
 

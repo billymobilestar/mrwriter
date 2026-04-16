@@ -75,41 +75,42 @@ export default function Home() {
     <div className="min-h-screen" style={{ background: "var(--bg-deep)" }}>
       {/* Header */}
       <header style={{ background: "var(--surface)", borderBottom: "1px solid var(--border)" }}>
-        <div className="max-w-5xl mx-auto px-8 py-5 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: "var(--accent-soft)" }}>
+        <div className="max-w-5xl mx-auto px-4 sm:px-8 py-4 sm:py-5 flex items-center justify-between gap-3">
+          <div className="flex items-center gap-3 min-w-0">
+            <div className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0" style={{ background: "var(--accent-soft)" }}>
               <svg viewBox="0 0 24 24" fill="none" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5" style={{ stroke: "var(--accent)" }}>
                 <path d="M17 3a2.85 2.85 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z" />
               </svg>
             </div>
-            <div>
+            <div className="min-w-0">
               <h1 className="text-lg font-semibold" style={{ color: "var(--text)" }}>MrWriter</h1>
-              <p className="text-xs" style={{ color: "var(--text-muted)" }}>Screenwriting software</p>
+              <p className="text-xs hidden sm:block" style={{ color: "var(--text-muted)" }}>Screenwriting software</p>
             </div>
           </div>
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 sm:gap-3 shrink-0">
             <button
               onClick={handleCreateScript}
-              className="flex items-center gap-2 px-4 py-2.5 text-sm font-medium text-white rounded-xl transition-all hover:brightness-110 active:scale-[0.97]"
+              className="flex items-center justify-center gap-2 w-10 h-10 sm:w-auto sm:h-auto sm:px-4 sm:py-2.5 text-sm font-medium text-white rounded-xl transition-all hover:brightness-110 active:scale-[0.97]"
               style={{ background: "var(--accent)" }}
+              title="New Script"
             >
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="w-4 h-4">
                 <path d="M12 5v14M5 12h14" strokeLinecap="round" />
               </svg>
-              New Script
+              <span className="hidden sm:inline">New Script</span>
             </button>
 
-            <div className="w-px h-6" style={{ background: "var(--border)" }} />
+            <div className="hidden sm:block w-px h-6" style={{ background: "var(--border)" }} />
 
             {/* User menu */}
             <div className="flex items-center gap-2">
               <div
-                className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold uppercase"
+                className="w-9 h-9 sm:w-8 sm:h-8 rounded-full flex items-center justify-center text-sm sm:text-xs font-bold uppercase shrink-0"
                 style={{ background: "var(--accent-soft)", color: "var(--accent)" }}
               >
                 {user.email?.charAt(0) || "U"}
               </div>
-              <div className="hidden sm:block">
+              <div className="hidden md:block">
                 <p className="text-xs font-medium truncate max-w-[140px]" style={{ color: "var(--text)" }}>
                   {user.email}
                 </p>
@@ -134,7 +135,7 @@ export default function Home() {
       </header>
 
       {/* Main */}
-      <main className="max-w-5xl mx-auto px-8 py-10">
+      <main className="max-w-5xl mx-auto px-4 sm:px-8 py-6 sm:py-10">
         {/* Create section */}
         <p className="text-[11px] font-semibold uppercase tracking-[0.15em] mb-4" style={{ color: "var(--text-muted)" }}>
           Create
