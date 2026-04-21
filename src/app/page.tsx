@@ -140,7 +140,7 @@ export default function Home() {
         <p className="text-[11px] font-semibold uppercase tracking-[0.15em] mb-4" style={{ color: "var(--text-muted)" }}>
           Create
         </p>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-14">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 mb-14">
           <button
             onClick={handleCreateScript}
             className="group flex items-center gap-4 p-5 rounded-2xl border transition-all hover:scale-[1.01] active:scale-[0.99]"
@@ -175,6 +175,24 @@ export default function Home() {
             <div className="text-left">
               <p className="font-semibold text-[14px]" style={{ color: "var(--text)" }}>Reddit Import</p>
               <p className="text-xs mt-0.5" style={{ color: "var(--text-muted)" }}>Turn a thread into a screenplay</p>
+            </div>
+          </button>
+
+          <button
+            onClick={() => router.push("/library")}
+            className="group flex items-center gap-4 p-5 rounded-2xl border transition-all hover:scale-[1.01] active:scale-[0.99]"
+            style={{ background: "var(--surface)", borderColor: "var(--border)" }}
+            onMouseEnter={(e) => { e.currentTarget.style.borderColor = "#a855f7"; e.currentTarget.style.background = "var(--surface-hover)"; }}
+            onMouseLeave={(e) => { e.currentTarget.style.borderColor = "var(--border)"; e.currentTarget.style.background = "var(--surface)"; }}
+          >
+            <div className="w-12 h-12 rounded-xl flex items-center justify-center shrink-0" style={{ background: "rgba(168,85,247,0.12)" }}>
+              <svg viewBox="0 0 24 24" fill="none" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5" style={{ stroke: "#a855f7" }}>
+                <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20" />
+              </svg>
+            </div>
+            <div className="text-left">
+              <p className="font-semibold text-[14px]" style={{ color: "var(--text)" }}>Reddit Library</p>
+              <p className="text-xs mt-0.5" style={{ color: "var(--text-muted)" }}>Save threads to read and import later</p>
             </div>
           </button>
         </div>
