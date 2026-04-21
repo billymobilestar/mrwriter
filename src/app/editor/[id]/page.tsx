@@ -9,6 +9,7 @@ import RedditImportModal from "@/components/RedditImportModal";
 import AiPanel from "@/components/AiPanel";
 import { useAuth } from "@/lib/auth-context";
 import { getScript, updateScript } from "@/lib/db";
+import { downloadFountainAsPdf } from "@/lib/fountain-to-pdf";
 
 function EditorInner() {
   const params = useParams();
@@ -106,6 +107,17 @@ function EditorInner() {
     a.click();
     URL.revokeObjectURL(u);
   }, [content, title]);
+
+  const handleExportPdf = useCallback(async () => {
+    try {
+      await downloadFountainAsPdf(content, title);
+    } catch (err) {
+      console.error("PDF export failed:", err);
+      alert("PDF export failed. Please try again.");
+    }
+  }, [content, title]);
+
+  const [showExportMenu, setShowExportMenu] = useState(false);
 
   if (authLoading || !user) {
     return (
@@ -234,19 +246,81 @@ function EditorInner() {
 
           <div className="hidden sm:block w-px h-5 mx-0.5" style={{ background: "var(--border)" }} />
 
-          <button
-            onClick={handleExportFountain}
-            disabled={!content}
-            className="hidden sm:flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-[13px] font-medium transition-all disabled:opacity-30"
-            style={{ background: "var(--surface-raised)", color: "var(--text-secondary)", border: "1px solid var(--border)" }}
-            onMouseEnter={(e) => { if (content) e.currentTarget.style.background = "var(--surface-hover)"; }}
-            onMouseLeave={(e) => { e.currentTarget.style.background = "var(--surface-raised)"; }}
-          >
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-3.5 h-3.5">
-              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3" />
-            </svg>
-            Export
-          </button>
+          {/* Export dropdown */}
+          <div className="hidden sm:block relative">
+            <button
+              onClick={() => setShowExportMenu(!showExportMenu)}
+              disabled={!content}
+              className="flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-[13px] font-medium transition-all disabled:opacity-30"
+              style={{
+                background: showExportMenu ? "var(--surface-hover)" : "var(--surface-raised)",
+                color: "var(--text-secondary)",
+                border: "1px solid var(--border)",
+              }}
+              onMouseEnter={(e) => { if (content && !showExportMenu) e.currentTarget.style.background = "var(--surface-hover)"; }}
+              onMouseLeave={(e) => { if (!showExportMenu) e.currentTarget.style.background = "var(--surface-raised)"; }}
+            >
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-3.5 h-3.5">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3" />
+              </svg>
+              Export
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-3 h-3">
+                <path d="M6 9l6 6 6-6" />
+              </svg>
+            </button>
+            {showExportMenu && (
+              <>
+                <div
+                  className="fixed inset-0 z-40"
+                  onClick={() => setShowExportMenu(false)}
+                />
+                <div
+                  className="absolute right-0 top-full mt-1 py-1 rounded-xl shadow-2xl z-50 min-w-[180px]"
+                  style={{
+                    background: "var(--surface)",
+                    border: "1px solid var(--border-strong)",
+                  }}
+                >
+                  <button
+                    onClick={() => { setShowExportMenu(false); handleExportPdf(); }}
+                    className="w-full flex items-center gap-3 px-3 py-2 text-[13px] text-left transition-colors"
+                    style={{ color: "var(--text)" }}
+                    onMouseEnter={(e) => e.currentTarget.style.background = "var(--surface-hover)"}
+                    onMouseLeave={(e) => e.currentTarget.style.background = "transparent"}
+                  >
+                    <div className="w-7 h-7 rounded-md flex items-center justify-center shrink-0" style={{ background: "rgba(239,68,68,0.1)" }}>
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4" style={{ color: "#ef4444" }}>
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                        <path d="M14 2v6h6" />
+                      </svg>
+                    </div>
+                    <div className="flex-1">
+                      <div className="font-medium">PDF</div>
+                      <div className="text-[10px]" style={{ color: "var(--text-muted)" }}>Industry-standard screenplay</div>
+                    </div>
+                  </button>
+                  <button
+                    onClick={() => { setShowExportMenu(false); handleExportFountain(); }}
+                    className="w-full flex items-center gap-3 px-3 py-2 text-[13px] text-left transition-colors"
+                    style={{ color: "var(--text)" }}
+                    onMouseEnter={(e) => e.currentTarget.style.background = "var(--surface-hover)"}
+                    onMouseLeave={(e) => e.currentTarget.style.background = "transparent"}
+                  >
+                    <div className="w-7 h-7 rounded-md flex items-center justify-center shrink-0" style={{ background: "var(--accent-soft)" }}>
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4" style={{ color: "var(--accent)" }}>
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                        <path d="M14 2v6h6M10 12h4M10 16h4" />
+                      </svg>
+                    </div>
+                    <div className="flex-1">
+                      <div className="font-medium">Fountain</div>
+                      <div className="text-[10px]" style={{ color: "var(--text-muted)" }}>Plain text, .fountain file</div>
+                    </div>
+                  </button>
+                </div>
+              </>
+            )}
+          </div>
         </div>
       </header>
 
